@@ -24,6 +24,8 @@ export default class App extends React.Component {
     this.calculate = this.calculate.bind(this)
     this.clearHighlights = this.clearHighlights.bind(this)
     this.enterSelectionMode = this.enterSelectionMode.bind(this)
+    this.randomizeTiles = this.randomizeTiles.bind(this)
+    this.setAllCoins = this.setAllCoins.bind(this)
   }
 
   componentDidMount() {
@@ -112,14 +114,37 @@ export default class App extends React.Component {
     this.setState({selection: true})
   }
 
+  setAllCoins() {
+    let board = this.state.board
+    for (let i = 0; i < 64; i++) {
+      board[i].flipped = 0
+    }
+    this.setState({board})
+    setTimeout(this.getCurrentValue, 50)
+  }
+
+  randomizeTiles() {
+    let board = this.state.board
+    for (let i = 0; i < 64; i++) {
+      board[i].flipped = Math.floor(2 * Math.random())
+    }
+    this.setState({board})
+    setTimeout(this.getCurrentValue, 50)
+  }
+
   handleChange(e) {
     this.setState({[e.target.id]: e.target.value})
-    setTimeout(this.calculate, 50)
   }
 
   render() {
     return (<div id="app">
       <div id="sidebar">
+        <h2>3Blue1Brown Chessboard Puzzle</h2>
+        <hr />
+        <br />
+        <button onClick={this.randomizeTiles}>Randomize Coins</button>
+        <br />
+        <button onClick={() => {this.setAllCoins()}}>Set All Coins to Heads</button>
         <h3>Current Encoded Position</h3>
         <div className="textarea-container">
           <textarea rows={1} cols={6} maxLength={6} disabled={true} value={this.state.bits.join("")}>
