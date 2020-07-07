@@ -1,6 +1,7 @@
 body {
   margin: 0;
   color: #eeeeee;
+  overflow-y: hidden;
 
   font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
