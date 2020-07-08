@@ -12,7 +12,7 @@ export default class App extends React.Component {
     }
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
-        this.state.board.push({x: j, y: i, color: Boolean((9*i + j + 1) % 2), flipped: Boolean(Math.floor(Math.random() * 2)), greenHighlight: false})
+        this.state.board.push({x: j, y: i, color: Boolean((9*i + j + 1) % 2), flipped: Boolean(Math.floor(Math.random() * 2)), greenHighlight: false, orangeHighlight: false, blueHighlight: false,})
       }
     }
 
@@ -78,6 +78,7 @@ export default class App extends React.Component {
     }
 
     this.setState({bits})
+    setTimeout(this.calculate, 25)
   }
 
   calculate() {
@@ -97,9 +98,16 @@ export default class App extends React.Component {
     }
 
     let pos = parseInt(bitsToFlip.join(""),2)
+    let target = parseInt(this.state.target_bits,2)
 
     let board = this.state.board
+
+    console.log(pos)
+    console.log(target)
+
     board[pos].greenHighlight = true;
+    board[target].blueHighlight = true    
+
     this.setState({board})
   }
 
@@ -107,6 +115,7 @@ export default class App extends React.Component {
     let board = this.state.board
     board.forEach(b => b.greenHighlight = false)
     board.forEach(b => b.orangeHighlight = false)
+    board.forEach(b => b.blueHighlight = false)
     this.setState(board)
   }
 
@@ -134,6 +143,17 @@ export default class App extends React.Component {
 
   handleChange(e) {
     this.setState({[e.target.id]: e.target.value})
+    setTimeout(this.getCurrentValue, 50)
+  }
+  
+  getBackgroundColor(b) {
+    if (b.blueHighlight) {
+      return "#5555ff"
+    } else if (b.color) {
+      return "#555555"
+    } else {
+      return "#333333"
+    }
   }
 
   render() {
@@ -147,7 +167,7 @@ export default class App extends React.Component {
         <button onClick={() => {this.setAllCoins()}}>Set All Coins to Heads</button>
         <h3>Current Encoded Position</h3>
         <div className="textarea-container">
-          <textarea rows={1} cols={6} maxLength={6} disabled={true} value={this.state.bits.join("")}>
+          <textarea rows={1} cols={6} maxLength={6} disabled={true} value={this.state.bits.join("")} id="current-position">
           </textarea>
         </div>
         <hr />
@@ -159,7 +179,7 @@ export default class App extends React.Component {
         </div>
         <hr />
         <h3>Explanation</h3>
-        <p>The tile in <span style={{color: "orange"}}>orange</span> is the tile that is currently encoded by the state of the board. When you input a position to encode, either by typing in the binary or by clicking the button then a tile, a coin will show up in <span style={{color: "green"}}>green.</span> When you flip that coin, the state of the board will change to the requested position.</p>
+        <p>The tile in <span style={{color: "orange"}}>orange</span> is the tile that is currently encoded by the state of the board. When you input a position to encode, either by typing in the binary or by clicking the button then a tile, that position will show in <span style={{color: "#5555ff"}}>blue</span> a coin will show up in <span style={{color: "green"}}>green.</span> When you flip that coin, the state of the board will change to the requested position.</p>
         <hr />
         <h3>Videos</h3>
         <iframe src="https://www.youtube.com/embed/as7Gkm7Y7h4" frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen title="standupmaths"></iframe>
@@ -170,11 +190,11 @@ export default class App extends React.Component {
           {this.state.board.map(b => 
             <div className="tile"
               onClick={() => this.registerClick(b.x,b.y)}
-              style={{backgroundColor: b.color ? "#555555" : "#333333", outline: ((8*b.y + b.x) === parseInt(this.state.bits.join(""), 2)) && "3px solid orange"}}
+              style={{backgroundColor: this.getBackgroundColor(b), outline: ((8*b.y + b.x) === parseInt(this.state.bits.join(""), 2)) && "3px solid orange"}}
               key={8*b.y + b.x}
               >
               <div className="coin"
-                style={{backgroundColor: b.flipped ? "#222222" : "#999999", border: b.greenHighlight && "3px solid green"}}
+                style={{backgroundColor: b.flipped ? "#222222" : "#999999", border: b.greenHighlight && "3px dashed green", }}
               >
               </div>
             </div>

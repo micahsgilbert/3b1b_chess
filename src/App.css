@@ -38,7 +38,6 @@
   width: 75%;
   height: 75%;
   border-radius: 100%;
-  background-color: red;
   margin: 12.5%;
   box-sizing: border-box;
 }
@@ -62,6 +61,7 @@
   border: none !important;
   outline: none !important;
   font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
 }
 
 button {
@@ -97,4 +97,12 @@ iframe {
 
 h2 {
   text-align: center;
+}
+
+#current-position {
+  color: orange
+}
+
+#target_bits {
+  color: #5555ff
 }
